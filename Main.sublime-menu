@@ -1,0 +1,23 @@
+[
+{
+	"id": "selection",
+	"children":
+	[
+		{
+			"caption": "Expand Selection to ...",
+	    	"command": "jump_to",
+	    	"args": {"select": true}
+	    }
+	]
+},
+{
+	"id": "goto",
+	"children":
+	[
+		{
+			"caption": "Jump to ...",
+	    	"command": "jump_to"
+	    }
+	]
+}
+]
