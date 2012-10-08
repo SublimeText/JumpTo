@@ -3,7 +3,7 @@ Summary
 
 JumpTo is a plugin for Sublime Text 2 to move the cursor to any position in the current line. It's very similar to some movement commands in Vim. This is especially useful when editing multiple similar lines at the same time.
 
-Watch [Link to video](test) to see a real world example on how I use it to refactore some code.
+Watch [this video](http://vimeo.com/48392058) to see a real world example on how I use it to refactore some code.
 
 Install
 =======
