@@ -1,4 +1,0 @@
-[
-	{ "keys": ["ctrl+e"], "command": "jump_to" },
-	{ "keys": ["ctrl+shift+e"], "command": "jump_to", "args": { "select": true } }
-]
