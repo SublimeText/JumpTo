@@ -71,6 +71,7 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
         self.window.show_input_panel(text, characters, self._on_enter, self._on_change, self._on_cancel)
 
     def _remove_highlight(self):
+        self.regions = []
         self.view.erase_regions("JumpTo")
 
     def _show_highlight(self):
@@ -95,5 +96,4 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
         self._show_highlight()
 
     def _on_cancel(self):
-        self.regions = []
         self._remove_highlight()
