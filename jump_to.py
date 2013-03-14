@@ -2,10 +2,14 @@
 Copyright (c) 2012, Jonas Pfannschmidt
 Contributors:
     - Dominique Wahli
+    - Xavi (https://github.com/xavi-/sublime-selectuntil)
 Licensed under the MIT license http://www.opensource.org/licenses/mit-license.php
 """
 import sublime
 import sublime_plugin
+import re
+
+RE_SELECTOR = re.compile("^(?:\[(-?\d+)\]|\{(.+)\}|/(.+)/)$")
 
 
 class JumpToBase(object):
@@ -28,6 +32,35 @@ class JumpToBase(object):
         else:
             return False
 
+    def find_next_re(self, chars, pt):
+        if chars == "":
+            return False
+
+        lr = self.view.line(pt)
+        line = self.view.substr(sublime.Region(pt, lr.b))
+        try:
+            result = re.search(chars, line)
+        except:
+            return False
+
+        if result is not None:
+            idx = result.start()
+            return pt + idx
+        else:
+            return False
+
+    def find_next_count(self, count, pt):
+        if count <= 0:
+            return False
+
+        lr = self.view.line(pt)
+        idx = pt + count
+
+        if idx <= lr.b:
+            return idx
+        else:
+            return False
+
     def process_regions(self):
         sel = self.view.sel()
         localedit = self.view.begin_edit()
@@ -39,10 +72,28 @@ class JumpToBase(object):
         self.regions = []
 
     def select_regions(self, characters):
+        result = RE_SELECTOR.search(characters)
+        if result:
+            groups = result.groups()
+            count = int(groups[0]) if groups[0] is not None else None
+            chars = groups[1]
+            regex = groups[2]
+        else:
+            count = None
+            chars = characters
+            regex = None
+
         sel = self.view.sel()
         self.regions = []
         for reg in sel:
-            new_pt = self.find_next(characters, reg.b)
+            if chars:
+                new_pt = self.find_next(chars, reg.b)
+            elif regex:
+                new_pt = self.find_next_re(regex, reg.b)
+            elif count:
+                new_pt = self.find_next_count(count, reg.b)
+            else:
+                new_pt = False
             if new_pt is not False:
                 if self.extend:
                     new_reg = sublime.Region(reg.a, new_pt)
@@ -60,7 +111,7 @@ class JumpToCommand(JumpToBase, sublime_plugin.TextCommand):
         self.process_regions()
 
 
-ADDREGIONS_SCOPE = "comment"
+ADDREGIONS_SCOPE = "jumpto"
 ADDREGIONS_FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
 
 
@@ -77,7 +128,7 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
     def _show_highlight(self):
         if self.regions:
             regions = [(r[1] if r[1] is not None else r[0]) for r in self.regions]
-            self.view.add_regions("JumpTo", regions, ADDREGIONS_SCOPE, ADDREGIONS_FLAGS)
+            self.view.add_regions("JumpTo", regions, ADDREGIONS_SCOPE, "", ADDREGIONS_FLAGS)
 
     def _on_enter(self, characters):
         self._remove_highlight()
