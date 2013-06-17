@@ -41,6 +41,7 @@ class JumpToBase(object):
         try:
             result = re.search(chars, line)
         except:
+            sublime.status_message("JumpTo: Error in regex !")
             return False
 
         if result is not None:
@@ -63,12 +64,10 @@ class JumpToBase(object):
 
     def process_regions(self):
         sel = self.view.sel()
-        localedit = self.view.begin_edit()
         for reg, new_reg in self.regions:
             if new_reg is not None:
                 sel.subtract(reg)
                 sel.add(new_reg)
-        self.view.end_edit(localedit)
         self.regions = []
 
     def select_regions(self, characters):
@@ -132,14 +131,13 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
 
     def _on_enter(self, characters):
         self._remove_highlight()
-        # Have to execute select_regions for the case when:
+        # Could not simply use process_regions() for the case when:
         # - the input_panel is open and you type something
         # - the user use the mouse to change the cursor(s) position
         # - he return to the input_panel and hit enter
         # In this case _on_change is not executed.
-        # self.select_regions(characters)
-        # self.process_regions()
-        # Finally, why not simply run the command ? This way the undo label is correct and it works with macro.
+        # So we simply run the command.
+        # This way the undo label is correct and it works with macro.
         self.view.run_command("jump_to", {"characters": characters, "extend": self.extend})
 
     def _on_change(self, characters):
