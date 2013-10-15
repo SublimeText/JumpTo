@@ -5,8 +5,8 @@
 	[
 		{
 			"caption": "Expand Selection to ...",
-	    	"command": "jump_to",
-	    	"args": {"select": true}
+	    	"command": "jump_to_interactive",
+	    	"args": {"extend": true}
 	    }
 	]
 },
@@ -16,7 +16,7 @@
 	[
 		{
 			"caption": "Jump to ...",
-	    	"command": "jump_to"
+	    	"command": "jump_to_interactive"
 	    }
 	]
 }

@@ -1,0 +1,4 @@
+[
+	{ "keys": ["ctrl+e"], "command": "jump_to_interactive" },
+	{ "keys": ["ctrl+shift+e"], "command": "jump_to_interactive", "args": { "extend": true } }
+]
