@@ -9,7 +9,7 @@ import sublime
 import sublime_plugin
 import re
 
-RE_SELECTOR = re.compile("^(?:\[(-?\d+)\]|\{(.+)\}|/(.+)/)$")
+RE_SELECTOR = re.compile("^(?:\{(-?\d+)\}|\[(.+)\]|/(.+)/)$")
 
 
 class JumpToBase(object):
@@ -74,12 +74,12 @@ class JumpToBase(object):
         result = RE_SELECTOR.search(characters)
         if result:
             groups = result.groups()
-            chars = groups[0]
-            count = int(groups[1]) if groups[1] is not None else None
+            count = int(groups[0]) if groups[0] is not None else None
+            chars = groups[1]
             regex = groups[2]
         else:
-            chars = characters
             count = None
+            chars = characters
             regex = None
 
         sel = self.view.sel()
