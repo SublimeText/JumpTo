@@ -1,23 +1,73 @@
 [
 {
-	"id": "selection",
-	"children":
-	[
-		{
-			"caption": "Expand Selection to ...",
-	    	"command": "jump_to_interactive",
-	    	"args": {"extend": true}
-	    }
-	]
+    "id": "selection",
+    "children":
+    [
+        {
+            "caption": "Expand Selection to ...",
+            "command": "jump_to_interactive",
+            "args": {"extend": true}
+        }
+    ]
 },
 {
-	"id": "goto",
-	"children":
-	[
-		{
-			"caption": "Jump to ...",
-	    	"command": "jump_to_interactive"
-	    }
-	]
+    "id": "goto",
+    "children":
+    [
+        {
+            "caption": "Jump to ...",
+            "command": "jump_to_interactive"
+        }
+    ]
+},
+{
+    "id": "preferences",
+    "children":
+    [
+        {
+            "id": "package-settings",
+            "children":
+            [
+                {
+                    "caption": "JumpTo",
+                    "children":
+                    [
+                        {
+                            "command": "open_file",
+                            "args": {
+                                "file": "${packages}/JumpTo/Example.sublime-keymap",
+                                "platform": "Windows"
+                            },
+                            "caption": "Key Bindings – Example"
+                        },
+                        {
+                            "command": "open_file",
+                            "args": {
+                                "file": "${packages}/User/Default (OSX).sublime-keymap",
+                                "platform": "OSX"
+                            },
+                            "caption": "Key Bindings – User"
+                        },
+                        {
+                            "command": "open_file",
+                            "args": {
+                                "file": "${packages}/User/Default (Linux).sublime-keymap",
+                                "platform": "Linux"
+                            },
+                            "caption": "Key Bindings – User"
+                        },
+                        {
+                            "command": "open_file",
+                            "args": {
+                                "file": "${packages}/User/Default (Windows).sublime-keymap",
+                                "platform": "Windows"
+                            },
+                            "caption": "Key Bindings – User"
+                        },
+                    ]
+                }
+            ]
+        }
+    ]
 }
 ]

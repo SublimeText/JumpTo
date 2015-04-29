@@ -1,4 +1,7 @@
+// Copy to 'Key Bindings - User' to enable the key bindings
+// --------------------------------------------------------
+
 [
-	{ "keys": ["ctrl+e"], "command": "jump_to_interactive" },
-	{ "keys": ["ctrl+shift+e"], "command": "jump_to_interactive", "args": { "extend": true } }
+    { "keys": ["ctrl+e"], "command": "jump_to_interactive" },
+    { "keys": ["ctrl+shift+e"], "command": "jump_to_interactive", "args": { "extend": true } }
 ]
