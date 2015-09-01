@@ -13,8 +13,9 @@ RE_SELECTOR = re.compile("^(?:\{(-?\d+)\}|\[(.+)\]|/(.+)/)$")
 
 
 class JumpToBase(object):
-    def _run(self, edit, view, extend=False):
+    def _run(self, edit, view, extend, create_new):
         self.extend = extend
+        self.create_new = create_new
         self.regions = []
         if view:
             self.view = view
@@ -66,7 +67,8 @@ class JumpToBase(object):
         sel = self.view.sel()
         for reg, new_reg in self.regions:
             if new_reg is not None:
-                sel.subtract(reg)
+                if not self.create_new:
+                    sel.subtract(reg)
                 sel.add(new_reg)
         self.regions = []
 
@@ -104,8 +106,8 @@ class JumpToBase(object):
 
 
 class JumpToCommand(JumpToBase, sublime_plugin.TextCommand):
-    def run(self, edit, characters="", extend=False):
-        self._run(edit, None, extend)
+    def run(self, edit, characters="", extend=False, create_new=False):
+        self._run(edit, None, extend, create_new)
         self.select_regions(characters)
         self.process_regions()
 
@@ -115,8 +117,8 @@ ADDREGIONS_FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
 
 
 class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
-    def run(self, characters="", extend=False):
-        self._run(None, self.window.active_view(), extend)
+    def run(self, characters="", extend=False, create_new=False):
+        self._run(None, self.window.active_view(), extend, create_new)
         text = "Expand selection" if extend else "Jump"
         text += " to (chars or [chars] or {count} or /regex/):"
         self.window.show_input_panel(text, characters, self._on_enter, self._on_change, self._on_cancel)
@@ -126,9 +128,16 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
         self.view.erase_regions("JumpTo")
 
     def _show_highlight(self):
-        if self.regions:
-            regions = [(r[1] if r[1] is not None else r[0]) for r in self.regions]
-            self.view.add_regions("JumpTo", regions, ADDREGIONS_SCOPE, "", ADDREGIONS_FLAGS)
+        if not self.regions:
+            return
+        if self.create_new:
+            regions = [r[0] for r in self.regions]
+            regions.extend(r[1] for r in self.regions if r[1] is not None)
+        else:
+            regions = [(r[1] if r[1] is not None else r[0])
+                       for r in self.regions]
+        self.view.add_regions("JumpTo", regions, ADDREGIONS_SCOPE, "",
+                              ADDREGIONS_FLAGS)
 
     def _on_enter(self, characters):
         self._remove_highlight()
@@ -139,7 +148,10 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
         # In this case _on_change is not executed.
         # So we simply run the command.
         # This way the undo label is correct and it works with macro.
-        self.view.run_command("jump_to", {"characters": characters, "extend": self.extend})
+        self.view.run_command("jump_to",
+                              {"characters": characters,
+                               "extend": self.extend,
+                               "create_new": self.create_new})
 
     def _on_change(self, characters):
         self.select_regions(characters)
