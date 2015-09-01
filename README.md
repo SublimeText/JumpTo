@@ -14,9 +14,9 @@ Install
 Usage
 =====
 
-Press ctrl+e (or click on Goto -> Jump to) and enter a search string. The cursor will jump to the start of the first occurence of this search string.
+Press ctrl+e (or click on Goto -> Jump to) and enter a search string. The cursor will jump to the start of the first occurrence of this search string.
 
-Press ctrl+shift+e (or click on Selection -> Expand Selection to) to select all characters from the current cursor position to the first occurence of the search string.
+Press ctrl+shift+e (or click on Selection -> Expand Selection to) to select all characters from the current cursor position to the first occurrence of the search string.
 
 Options
 ========
