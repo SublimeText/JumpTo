@@ -22,8 +22,8 @@ class JumpToBase(object):
             self.view = view
 
     def find_next(self, chars, pt):
-        if chars == "":
-            return False
+        if not chars:
+            return
 
         lr = self.view.line(pt)
         line = self.view.substr(sublime.Region(pt, lr.b))
@@ -32,12 +32,10 @@ class JumpToBase(object):
         if idx >= 0:
             pt_start = pt + idx
             return sublime.Region(pt_start, pt_start + len(chars))
-        else:
-            return False
 
     def find_next_re(self, chars, pt):
-        if chars == "":
-            return False
+        if not chars:
+            return
 
         lr = self.view.line(pt)
         line = self.view.substr(sublime.Region(pt, lr.b))
@@ -45,24 +43,20 @@ class JumpToBase(object):
             result = re.search(chars, line)
         except:
             sublime.status_message("JumpTo: Error in regex !")
-            return False
+            return
 
         if result:
             return sublime.Region(pt + result.start(), pt + result.end())
-        else:
-            return False
 
     def find_next_count(self, count, pt):
         if count <= 0:
-            return False
+            return
 
         lr = self.view.line(pt)
         idx = pt + count
 
         if idx <= lr.b:
             return sublime.Region(idx, idx)
-        else:
-            return False
 
     def process_regions(self):
         sel = self.view.sel()
@@ -81,9 +75,8 @@ class JumpToBase(object):
             chars = groups[1]
             regex = groups[2]
         else:
-            count = None
+            count = regex = None
             chars = characters
-            regex = None
 
         sel = self.view.sel()
         self.regions = []
@@ -95,15 +88,13 @@ class JumpToBase(object):
             elif count:
                 new_reg = self.find_next_count(count, reg.b)
             else:
-                new_reg = False
-            if new_reg is not False:
+                new_reg = None
+            if new_reg is not None:
                 if self.extend:
                     end = new_reg.b if self.whole_selection else new_reg.a
                     new_reg = sublime.Region(reg.a, end)
                 elif not self.whole_selection:
                     new_reg = sublime.Region(new_reg.a, new_reg.a)
-            else:
-                new_reg = None
             self.regions.append((reg, new_reg))
 
 
