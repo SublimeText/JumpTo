@@ -13,9 +13,10 @@ RE_SELECTOR = re.compile("^(?:\{(-?\d+)\}|\[(.+)\]|/(.+)/)$")
 
 
 class JumpToBase(object):
-    def _run(self, edit, view, extend, create_new):
+    def _run(self, edit, view, extend, create_new, whole_selection):
         self.extend = extend
         self.create_new = create_new
+        self.whole_selection = whole_selection
         self.regions = []
         if view:
             self.view = view
@@ -29,7 +30,8 @@ class JumpToBase(object):
         idx = line.find(chars, 1)
 
         if idx >= 0:
-            return pt + idx
+            pt_start = pt + idx
+            return sublime.Region(pt_start, pt_start + len(chars))
         else:
             return False
 
@@ -45,9 +47,8 @@ class JumpToBase(object):
             sublime.status_message("JumpTo: Error in regex !")
             return False
 
-        if result is not None:
-            idx = result.start()
-            return pt + idx
+        if result:
+            return sublime.Region(pt + result.start(), pt + result.end())
         else:
             return False
 
@@ -59,7 +60,7 @@ class JumpToBase(object):
         idx = pt + count
 
         if idx <= lr.b:
-            return idx
+            return sublime.Region(idx, idx)
         else:
             return False
 
@@ -88,26 +89,28 @@ class JumpToBase(object):
         self.regions = []
         for reg in sel:
             if chars:
-                new_pt = self.find_next(chars, reg.b)
+                new_reg = self.find_next(chars, reg.b)
             elif regex:
-                new_pt = self.find_next_re(regex, reg.b)
+                new_reg = self.find_next_re(regex, reg.b)
             elif count:
-                new_pt = self.find_next_count(count, reg.b)
+                new_reg = self.find_next_count(count, reg.b)
             else:
-                new_pt = False
-            if new_pt is not False:
+                new_reg = False
+            if new_reg is not False:
                 if self.extend:
-                    new_reg = sublime.Region(reg.a, new_pt)
-                else:
-                    new_reg = sublime.Region(new_pt, new_pt)
+                    end = new_reg.b if self.whole_selection else new_reg.a
+                    new_reg = sublime.Region(reg.a, end)
+                elif not self.whole_selection:
+                    new_reg = sublime.Region(new_reg.a, new_reg.a)
             else:
                 new_reg = None
             self.regions.append((reg, new_reg))
 
 
 class JumpToCommand(JumpToBase, sublime_plugin.TextCommand):
-    def run(self, edit, characters="", extend=False, create_new=False):
-        self._run(edit, None, extend, create_new)
+    def run(self, edit, characters="", extend=False, create_new=False,
+            whole_selection=False):
+        self._run(edit, None, extend, create_new, whole_selection)
         self.select_regions(characters)
         self.process_regions()
 
@@ -117,8 +120,10 @@ ADDREGIONS_FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
 
 
 class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
-    def run(self, characters="", extend=False, create_new=False):
-        self._run(None, self.window.active_view(), extend, create_new)
+    def run(self, characters="", extend=False, create_new=False,
+            whole_selection=False):
+        self._run(None, self.window.active_view(), extend, create_new,
+                  whole_selection)
         if extend:
             text = "Expand selection to"
         elif create_new:
@@ -126,7 +131,8 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
         else:
             text = "Jump to"
         text += " (chars or [chars] or {count} or /regex/):"
-        self.window.show_input_panel(text, characters, self._on_enter, self._on_change, self._on_cancel)
+        self.window.show_input_panel(text, characters, self._on_enter,
+                                     self._on_change, self._on_cancel)
 
     def _remove_highlight(self):
         self.regions = []
@@ -156,7 +162,8 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
         self.view.run_command("jump_to",
                               {"characters": characters,
                                "extend": self.extend,
-                               "create_new": self.create_new})
+                               "create_new": self.create_new,
+                               "whole_selection": self.whole_selection})
 
     def _on_change(self, characters):
         self.select_regions(characters)
