@@ -119,8 +119,13 @@ ADDREGIONS_FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
 class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
     def run(self, characters="", extend=False, create_new=False):
         self._run(None, self.window.active_view(), extend, create_new)
-        text = "Expand selection" if extend else "Jump"
-        text += " to (chars or [chars] or {count} or /regex/):"
+        if extend:
+            text = "Expand selection to"
+        elif create_new:
+            text = "Create caret at"
+        else:
+            text = "Jump to"
+        text += " (chars or [chars] or {count} or /regex/):"
         self.window.show_input_panel(text, characters, self._on_enter, self._on_change, self._on_cancel)
 
     def _remove_highlight(self):
