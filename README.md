@@ -1,3 +1,5 @@
+I'm not actively working on this project anymore. If somebody wants to maintain it, please send me an email to jonas.pfannschmidt at gmail.com. Otherwise, https://github.com/xavi-/sublime-selectuntil seems to be a good alternative.
+
 Summary
 =======
 
