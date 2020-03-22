@@ -3,5 +3,7 @@
 
 [
     { "keys": ["ctrl+e"], "command": "jump_to_interactive" },
-    { "keys": ["ctrl+shift+e"], "command": "jump_to_interactive", "args": { "extend": true } }
+    { "keys": ["ctrl+shift+e"], "command": "jump_to_interactive", "args": { "extend": true, "whole_selection": true } },
+    { "keys": ["alt+e"], "command": "jump_to_interactive", "args": { "create_new": true } },
+    { "keys": ["ctrl+alt+e"], "command": "jump_to_interactive", "args": { "create_new": true, "whole_selection": true } }
 ]
