@@ -52,10 +52,3 @@ Options
 - `whole_match`:
   Whether the command should result in a selection from the matched text
   instead of a single caret at the start of the match.
-
-License
-=======
-
-Copyright (c) 2012, Jonas Pfannschmidt
-
-Licensed under the MIT license http://www.opensource.org/licenses/mit-license.php

@@ -1,11 +1,3 @@
-"""
-Copyright (c) 2012, Jonas Pfannschmidt
-Contributors:
-    - Dominique Wahli
-    - Xavi (https://github.com/xavi-/sublime-selectuntil)
-    - Richard Stein
-Licensed under the MIT license http://www.opensource.org/licenses/mit-license.php
-"""
 import sublime
 import sublime_plugin
 import re
