@@ -3,13 +3,14 @@ Copyright (c) 2012, Jonas Pfannschmidt
 Contributors:
     - Dominique Wahli
     - Xavi (https://github.com/xavi-/sublime-selectuntil)
+    - Richard Stein
 Licensed under the MIT license http://www.opensource.org/licenses/mit-license.php
 """
 import sublime
 import sublime_plugin
 import re
 
-RE_SELECTOR = re.compile("^(?:\{(-?\d+)\}|\[(.+)\]|/(.+)/)$")
+RE_SELECTOR = re.compile(r"^(?:\{(-?\d+)\}|\[(.+)\]|/(.+)/)$")
 
 
 class JumpToBase(object):
@@ -41,7 +42,7 @@ class JumpToBase(object):
         line = self.view.substr(sublime.Region(pt, lr.b))
         try:
             result = re.search(chars, line)
-        except:
+        except Exception:
             sublime.status_message("JumpTo: Error in regex !")
             return
 
