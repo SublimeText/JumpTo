@@ -14,10 +14,10 @@ RE_SELECTOR = re.compile(r"^(?:\{(-?\d+)\}|\[(.+)\]|/(.+)/)$")
 
 
 class JumpToBase(object):
-    def _run(self, edit, view, extend, create_new, whole_selection):
+    def _run(self, edit, view, extend, create_new, whole_match):
         self.extend = extend
         self.create_new = create_new
-        self.whole_selection = whole_selection
+        self.whole_match = whole_match
         self.regions = []
         if view:
             self.view = view
@@ -92,17 +92,17 @@ class JumpToBase(object):
                 new_reg = None
             if new_reg is not None:
                 if self.extend:
-                    end = new_reg.b if self.whole_selection else new_reg.a
+                    end = new_reg.b if self.whole_match else new_reg.a
                     new_reg = sublime.Region(reg.a, end)
-                elif not self.whole_selection:
+                elif not self.whole_match:
                     new_reg = sublime.Region(new_reg.a, new_reg.a)
             self.regions.append((reg, new_reg))
 
 
 class JumpToCommand(JumpToBase, sublime_plugin.TextCommand):
     def run(self, edit, characters="", extend=False, create_new=False,
-            whole_selection=False):
-        self._run(edit, None, extend, create_new, whole_selection)
+            whole_match=False):
+        self._run(edit, None, extend, create_new, whole_match)
         self.select_regions(characters)
         self.process_regions()
 
@@ -113,9 +113,9 @@ ADDREGIONS_FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
 
 class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
     def run(self, characters="", extend=False, create_new=False,
-            whole_selection=False):
+            whole_match=False):
         self._run(None, self.window.active_view(), extend, create_new,
-                  whole_selection)
+                  whole_match)
         if extend:
             text = "Expand selection to"
         elif create_new:
@@ -155,7 +155,7 @@ class JumpToInteractiveCommand(JumpToBase, sublime_plugin.WindowCommand):
                               {"characters": characters,
                                "extend": self.extend,
                                "create_new": self.create_new,
-                               "whole_selection": self.whole_selection})
+                               "whole_match": self.whole_match})
 
     def _on_change(self, characters):
         self.select_regions(characters)

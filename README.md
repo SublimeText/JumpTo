@@ -25,7 +25,7 @@ Options
 
 - __extend__: extend the current selection until the search result
 - __create_new__: True, if the current caret should stay and a new caret should be created at the target position
-- __whole_selection__: Whether the command should result in a selection instead of a single caret
+- __whole_match__: Whether the command should result in a selection instead of a single caret at the start of the match
 
 License
 =======
