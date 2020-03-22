@@ -1,31 +1,56 @@
-I'm not actively working on this project anymore. If somebody wants to maintain it, please send me an email to jonas.pfannschmidt at gmail.com. Otherwise, https://github.com/xavi-/sublime-selectuntil seems to be a good alternative.
-
 Summary
 =======
 
-JumpTo is a plugin for Sublime Text 2 to move the cursor to any position in the current line. It's very similar to some movement commands in Vim. This is especially useful when editing multiple similar lines at the same time.
+JumpTo is a plugin for Sublime Text
+to move the cursor to any position in the current line.
+It's very similar to some movement commands in Vim.
+This is especially useful
+when editing multiple similar lines at the same time
+with multiple selections.
 
-Watch [this video](http://vimeo.com/48392058) to see a real world example on how I use it to refactor some code.
+Watch [this video](http://vimeo.com/48392058)
+to see a real world example
+on how I use it to refactor some code.
 
 Install
 =======
 
-- Copy this repository into the Sublime Text 2 "Packages" directory.
-- Install keymaps for the commands (see Example.sublime-keymap for my preferred keys)
+1. [Install Package Control](https://packagecontrol.io/installation)
+1. In the Command Palette, select <kbd>Package Control: Install Package</kbd>.
+1. Select `JumpTo`.
+1. Create keymaps for the commands (see Example.sublime-keymap for my preferred keys)
 
 Usage
 =====
 
-Press ctrl+e (or click on Goto -> Jump to) and enter a search string. The cursor will jump to the start of the first occurrence of this search string.
+The package does not define key bindings by default,
+so you must add them on your own.
 
-Press ctrl+shift+e (or click on Selection -> Expand Selection to) to select all characters from the current cursor position to the first occurrence of the search string.
+With the bindings shown in `Example.sublime-keymap`,
+you can use it like follows:
+
+- Press <kdb>ctrl+e</kdb>
+  (or select on Goto -> Jump to)
+  and enter a search string.
+  The cursor will jump to the start
+  of the first occurrence of this search string.
+
+- Press <kbd>ctrl+shift+e</kbd>
+  (or select on <kbd>Selection -> Expand Selection to …<kbd>)
+  to select all characters from the current cursor position
+  to the first occurrence of the search string.
 
 Options
 ========
 
-- __extend__: extend the current selection until the search result
-- __create_new__: True, if the current caret should stay and a new caret should be created at the target position
-- __whole_match__: Whether the command should result in a selection instead of a single caret at the start of the match
+- `extend`:
+  Extend the current selection until the search result.
+- `create_new`:
+  Whether the current caret(s) should stay
+  and a new caret should be created at the target position.
+- `whole_match`:
+  Whether the command should result in a selection from the matched text
+  instead of a single caret at the start of the match.
 
 License
 =======
