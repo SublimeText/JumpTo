@@ -15,10 +15,11 @@ on how I use it to refactor some code.
 Install
 =======
 
-1. [Install Package Control](https://packagecontrol.io/installation)
+1. [Install Package Control](https://packagecontrol.io/installation).
 1. In the Command Palette, select <kbd>Package Control: Install Package</kbd>.
 1. Select `JumpTo`.
-1. Create keymaps for the commands (see Example.sublime-keymap for my preferred keys)
+1. Create keymaps for the commands 
+   (see `Example.sublime-keymap` for a suggestion).
 
 Usage
 =====
